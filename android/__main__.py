@@ -76,6 +76,7 @@ async def islemler():
     #with userbot:
 
 async def addconcact(): 
+    logo(True)
     nekadar=50
     calinacakgrup = soru("Üyelerini Rehbere Ekliyeceğim Grubun kullanıcı adı: (Hangi gruptan üyeleri çekeyim) ")
     try:
@@ -131,7 +132,7 @@ async def main():
     userbot = await hesabagir()
     a = True
     while a:
-        try: userbot = await conn(userbot); await joinreq();await islemler(userbot)
+        try: userbot = await conn(userbot); await joinreq();await islemler()
         except Exception as e:
             if "deleted/deactivated" in str(e):
                 hata("Telegram adminleri hesabınızı yasaklamış olduğundan işlem yapılamıyor")
