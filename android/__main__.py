@@ -58,26 +58,23 @@ pro=False
 
 
 async def islemler():
-    basarili("Bot çalışıyor...")
     while True:
-        bilgi("""
-        1- Rehbere Ekle Operasyonu
-        2-Rehberi Temizle
-        """)
+        bilgi("1- Rehbere Ekle Operasyonu\n2-Rehberi Temizle")
         islem=None
         try:
-            islem= int(soru("Yapmak istediğiniz işlemin numarasını yazın: "));break
+            islem= int(soru("Yapmak istediğiniz işlemin numarasını yazın: "))
             if islem>2:raise Exception("Büyük sayı")
         except:noadded("Sadece numara yazabilirsin")
 
-        if islem==1:await addconcact()
-        elif islem==2: await delconcact()
-        else:exit(1)
-    #with userbot:
+        if islem==None: continue 
+        if islem<3: break
+    if islem==1:await addconcact()
+    elif islem==2: await delconcact()
+    else:exit(1)
 
 async def addconcact(): 
     logo(True)
-    nekadar=50
+    nekadar=50;calinan=0;calinamayan=0;
     calinacakgrup = soru("Üyelerini Rehbere Ekliyeceğim Grubun kullanıcı adı: (Hangi gruptan üyeleri çekeyim) ")
     try:
         calinacakgrup = (await userbot.get_entity(calinacakgrup)).id
