@@ -14,7 +14,7 @@ from telethon import TelegramClient
 from traceback import format_exc
 from random import sample as I
 from time import sleep
-import asyncio
+import asyncio, sys
 
 
 userbot=None
@@ -63,14 +63,51 @@ async def islemler():
         islem=None
         try:
             islem= int(soru("Yapmak istediğiniz işlemin numarasını yazın: "))
-            if islem>2:raise Exception("Büyük sayı")
+            if islem>3:raise Exception("Büyük sayı")
         except:noadded("Sadece numara yazabilirsin")
 
         if islem==None: continue 
-        if islem<3: break
+        if islem<4: break
     if islem==1:await addconcact()
     elif islem==2: await delconcact()
-    else:exit(1)
+    elif islem==3: await getstatus()
+    else:sys.exit(1)
+
+async def getstatus(): 
+    logo(True)
+    nekadar=50;calinan=0;calinamayan=0;
+    calinacakgrup = soru("Üyelerini Rehbere Ekliyeceğim Grubun kullanıcı adı: (Hangi gruptan üyeleri çekeyim) ")
+    try:
+        calinacakgrup = (await userbot.get_entity(calinacakgrup)).id
+        count = (await userbot.get_participants(calinacakgrup, limit=1)).total
+        bilgi(f"{calinacakgrup} ögesinde {count} kişi bulundu! ")
+    except Exception as e:
+        if "deleted/deactivated" in str(e):
+            hata("Telegram adminleri hesabınızı yasaklamış olduğundan işlem yapılamıyor")
+        hata(e)
+    foricin_i=0;thenextreklam=6;F=await userbot.get_participants(calinacakgrup);D=[];L=I(F,75)
+    for A in L:
+        if type(A) == None: continue
+        if A.id in D: continue
+        if A.bot:
+                passed("{} bot olduğu için geçiliyor!".format(A.username))
+                sleep(2);continue
+        if A:
+            try:
+                if foricin_i==thenextreklam:
+                    if not pro:ads(reklamtext + "\nReklam süresi bitene kadar bekleniyor...",15)
+                    bilgi("Şimdiye kadar çalınan üye sayısı: {}".format(calinan))
+                    thenextreklam=foricin_i+6
+                basarili(A.status)
+                calinan= calinan + 1
+                basarili("{}({}) gruba başarıyla eklendi!".format(A.first_name,A.id));foricin_i+=1
+            except Exception as e:
+                #noadded("${} gruba eklenemedi!: {}".format(A.id,str(e)))
+                noadded(format_exc())
+                calinamayan = calinamayan + 1; continue 
+            sleep(5)
+            D.append(A.id)
+
 
 async def addconcact(): 
     logo(True)
