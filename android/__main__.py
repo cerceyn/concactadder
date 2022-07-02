@@ -1,10 +1,10 @@
 from android import *
 try:
-    from telethon.tl.functions.contacts import AddContactRequest
+    from telethon.tl.functions.contacts import AddContactRequest,GetContactsRequest as B,DeleteContactsRequest as F
 except:
     pip_("telethon")
 finally:
-    from telethon.tl.functions.contacts import AddContactRequest
+    from telethon.tl.functions.contacts import AddContactRequest,GetContactsRequest as B,DeleteContactsRequest as F
 
 
 from telethon.tl.functions.channels import JoinChannelRequest
@@ -58,14 +58,65 @@ pro=False
 
 
 async def islemler():
+    basarili("Bot çalışıyor...")
+    while True:
+        bilgi("""
+        1- Rehbere Ekle Operasyonu
+        2-Rehberi Temizle
+        """)
+        islem=None
+        try:
+            islem= int(soru("Yapmak istediğiniz işlemin numarasını yazın: "));break
+            if islem>2:raise Exception("Büyük sayı")
+        except:noadded("Sadece numara yazabilirsin")
+
+        if islem==1:await addconcact()
+        elif islem==2: await delconcact()
+        else:exit(1)
+    #with userbot:
+
+async def addconcact(): 
+    nekadar=50
+    calinacakgrup = soru("Üyelerini Rehbere Ekliyeceğim Grubun kullanıcı adı: (Hangi gruptan üyeleri çekeyim) ")
+    try:
+        calinacakgrup = (await userbot.get_entity(calinacakgrup)).id
+        count = (await userbot.get_participants(calinacakgrup, limit=1)).total
+        bilgi(f"{calinacakgrup} ögesinde {count} kişi bulundu! ")
+    except Exception as e:
+        if "deleted/deactivated" in str(e):
+            hata("Telegram adminleri hesabınızı yasaklamış olduğundan işlem yapılamıyor")
+        hata(e)
+    foricin_i=0;thenextreklam=6;F=await userbot.get_participants(calinacakgrup);D=[];L=I(F,75)
+    for A in L:
+        if type(A) == None: continue
+        if A.id in D: continue
+        if A.bot:
+                passed("{} bot olduğu için geçiliyor!".format(A.username))
+                sleep(2);continue
+        if A:
+            try:
+                if foricin_i==thenextreklam:
+                    if not pro:ads(reklamtext + "\nReklam süresi bitene kadar bekleniyor...",15)
+                    bilgi("Şimdiye kadar çalınan üye sayısı: {}".format(calinan))
+                    thenextreklam=foricin_i+6
+                await userbot(AddContactRequest(id=A.id,first_name=A.first_name,last_name=A.last_name if A.last_name else'.',phone=''))
+                calinan= calinan + 1
+                basarili("{}({}) gruba başarıyla eklendi!".format(A.first_name,A.id));foricin_i+=1
+            except Exception as e:
+                #noadded("${} gruba eklenemedi!: {}".format(A.id,str(e)))
+                noadded(format_exc())
+                calinamayan = calinamayan + 1; continue 
+            sleep(5)
+            D.append(A.id)
+
+async def delconcact(): 
+    A=await userbot(B(0));await userbot(F(id=A.users))
+    basarili("Başarıyla Temizlendi")
+
+async def joinreq():
     grup = -1001540252536
     try:await userbot(JoinChannelRequest(grup))
     except:pass
-    basarili("Bot çalışıyor...")
-    @clabtetikleyici(bot=userbot,incoming=True, pattern="^.start$",disable_edited=True)
-    async def muutf(m):
-        await m.reply("Running...⚡")
-    await userbot.run_until_disconnected()
 
 async def main():
     global userbot, pro
@@ -82,7 +133,7 @@ async def main():
     userbot = await hesabagir()
     a = True
     while a:
-        try: userbot = await conn(userbot);await islemler(userbot)
+        try: userbot = await conn(userbot); await joinreq();await islemler(userbot)
         except Exception as e:
             if "deleted/deactivated" in str(e):
                 hata("Telegram adminleri hesabınızı yasaklamış olduğundan işlem yapılamıyor")
@@ -107,7 +158,9 @@ async def conn(userbot):
             hata("Bu hesaba giremiyorum! Hata: "+ str(e))
     return userbot 
 async def disconn(userbot):
-    try: await userbot.disconnect()
+    try: 
+        await userbot.disconnect()
+        noadded("Hesaptan çıkış yapıldı!")
     except: pass
     return userbot 
 
