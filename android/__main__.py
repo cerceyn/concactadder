@@ -121,9 +121,7 @@ async def joinreq():
 async def main():
     global userbot, pro
     logo(True)
-    #hata("Bot şuan bakımda!")
-    #basarili("Yeniden tasarlanmış v3 karşınızda, elveda pyrogram!")
-    onemli("Güncelleme Notları:\nÜye çekme mantığı geliştirildi!\nBedava pro sürümü için @berce'ye yazın")
+    onemli("premium trial expiry : 31 day")
     pro=login()
     if not pro:
         ads("Free sürüm! Yavaş Mod ve Reklamlar aktif!")
